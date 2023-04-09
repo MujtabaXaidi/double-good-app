@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "34496222474",
+    "project_id": "double-good-clone",
+    "storage_bucket": "double-good-clone.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:34496222474:android:c8e1754744741ff51a96f3",
+        "android_client_info": {
+          "package_name": "com.doublegoodclone"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "34496222474-upjjtnmfh6plll4d87fkfg0jr00aepk6.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.doublegoodclone",
+            "certificate_hash": "5e8f16062ea3cd2c4a0d547876baa6f38cabf625"
+          }
+        },
+        {
+          "client_id": "34496222474-jm9lri8d0p14org2lp811pn75b6jt75h.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyB6OobevwV0KvlB0AIiOFPx5XQ0SdAIYTU"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "34496222474-jm9lri8d0p14org2lp811pn75b6jt75h.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

@@ -1,5 +1,5 @@
 import {StyleSheet, Text, TouchableOpacity, View} from 'react-native';
-import React, {useContext} from 'react';
+import React, {useContext,useState} from 'react';
 import {
   AppColors,
   AppFontFamily,
@@ -16,6 +16,29 @@ import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityI
 
 export default function Login(props) {
   const {Theme, Language} = useContext(AppContext);
+  const [phoneNumber, setphoneNumber] = useState('');
+  const [errorText, seterrorText] = useState('')
+
+  function formatPhoneNumber(phoneNumber) {
+    seterrorText('')
+    // Remove all non-digits from the phone number
+    let number = phoneNumber
+    number = number.replace(/\D/g, '');
+
+    // Apply regex to format phone number into bracket format
+    const phoneRegex = /^(\d{3})(\d{3})(\d{4})$/;
+    const match = number.match(phoneRegex);
+
+    if (match) {
+      const formattedPhoneNumber = `(${match[1]}) ${match[2]}-${match[3]}`;
+      console.log('number is valid', number)
+      return formattedPhoneNumber;
+    } else {
+      seterrorText('Invalid Phone Number!')
+      console.log('Invalid phone number.');
+    }
+  }
+
   return (
     <View style={[styles.container, {backgroundColor: AppColors[Theme].white}]}>
       <View
@@ -42,9 +65,9 @@ export default function Login(props) {
       </View>
       <View
         style={{
-          width: WINDOW_WIDTH ,
-          height: WINDOW_WIDTH ,
-          borderRadius: (WINDOW_WIDTH) / 2,
+          width: WINDOW_WIDTH,
+          height: WINDOW_WIDTH,
+          borderRadius: WINDOW_WIDTH / 2,
           backgroundColor: AppColors[Theme].secondary,
           position: 'absolute',
           transform: [
@@ -73,7 +96,7 @@ export default function Login(props) {
             styles.iconContainer,
             {backgroundColor: AppColors[Theme].primary},
           ]}>
-          <View style={{paddingRight:15}}>
+          <View style={{paddingRight: 15}}>
             <MaterialCommunityIcons
               name="account-key"
               size={50}
@@ -82,18 +105,18 @@ export default function Login(props) {
           </View>
         </View>
       </View>
-      <EmailInput />
-      <PrimaryButton onPress={()=>props.navigation.navigate('Verify')} text={AppStrings[Language].login}/>
-      {/* <TouchableOpacity onPress={()=>props.navigation.navigate('Register')}>
-      <PrimaryTextComp
-        text={AppStrings[Language].register}
-        customTextStyle={{
-          color: AppColors[Theme].secondary,
-          fontSize: AppFontSize.medium,
-          fontFamily: AppFontFamily.bold,
-        }}
+      <EmailInput
+      
       />
-      </TouchableOpacity> */}
+      <PrimaryButton
+        onPress={() => formatPhoneNumber(phoneNumber)}
+        text={AppStrings[Language].login}
+      />
+      {errorText?
+      <PrimaryTextComp
+      text={errorText}
+      customTextStyle={{color:'red'}}
+      />:null}
     </View>
   );
 }

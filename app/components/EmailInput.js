@@ -6,7 +6,7 @@ import {AppColors} from '../utils/AppStyle';
 import AppContext from '../utils/AppContext';
 import {AppStrings} from '../utils/AppStrings';
 
-export default function EmailInput({onChangeText}) {
+export default function EmailInput({onChangeText,onFocus}) {
   const {Theme, Language} = useContext(AppContext);
   return (
     <View style={[styles.mainContainer]}>
@@ -29,6 +29,7 @@ export default function EmailInput({onChangeText}) {
             placeholder={AppStrings[Language].phoneNumber}
             keyboardType="numeric"
             onChangeText={onChangeText}
+            onFocus={onFocus}
           />
           <MaterialCommunityIcons
             name="phone"
