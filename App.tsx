@@ -15,6 +15,7 @@ import EventCode from './app/screens/EventCode';
 import ScheduleEvent from './app/screens/ScheduleEvent';
 import AddEventDetails from './app/screens/AddEventDetails';
 import EventInfo from './app/screens/EventInfo';
+import EnterUserDetail from './app/screens/EnterUserDetail';
 
 const StackContainer = createNativeStackNavigator();
 const SplashStack = createNativeStackNavigator();
@@ -58,6 +59,7 @@ const AuthStackHandler = () => {
       <AuthStack.Screen component={Login} name="Login" />
       <AuthStack.Screen component={Register} name='Register'/>
       <AuthStack.Screen component={Verify} name='Verify'/>
+      <AuthStack.Screen component={EnterUserDetail}  name='EnterUserDetail'/>
     </AuthStack.Navigator>
   );
 };
@@ -76,12 +78,15 @@ const NavHandler = () => {
 export default function App() {
   const [Language, setLanguage] = useState('en')
   const [Theme, setTheme] = useState('blue')
+  const [userID, setUserID] = useState('')
   return (
     <AppContext.Provider value={{
       Language,
       setLanguage,
       Theme,
       setTheme,
+      userID,
+      setUserID
     }}>
       <NavigationContainer>
         <NavHandler />

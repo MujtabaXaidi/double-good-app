@@ -25,7 +25,7 @@ export default function TextInputComp({title,onChangeText}) {
       }}>
         <Text style={{marginLeft:10,marginTop:5,fontFamily:AppFontFamily.regular,fontSize:AppFontSize.small,color:AppColors[Theme].primary}}>{title}</Text>
       <TextInput
-        style={{width: WINDOW_WIDTH * 0.5, marginLeft: 10, marginTop: 0}}
+        style={{width: WINDOW_WIDTH * 0.5, marginLeft: 10, marginTop: 0,color:'black'}}
         onChangeText={onChangeText}
       />
     </View>

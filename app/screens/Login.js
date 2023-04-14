@@ -1,5 +1,5 @@
 import {StyleSheet, Text, TouchableOpacity, View} from 'react-native';
-import React, {useContext,useState} from 'react';
+import React, {useContext, useState, useEffect} from 'react';
 import {
   AppColors,
   AppFontFamily,
@@ -13,28 +13,58 @@ import PrimaryButton from '../components/PrimaryButton';
 import PrimaryTextComp from '../components/PrimaryTextComp';
 import {AppStrings} from '../utils/AppStrings';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
-
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import databaseInstance from '../database/FirebaseUtils';
+import auth from '@react-native-firebase/auth';
 export default function Login(props) {
-  const {Theme, Language} = useContext(AppContext);
+  const {Theme, Language, setUserID} = useContext(AppContext);
   const [phoneNumber, setphoneNumber] = useState('');
-  const [errorText, seterrorText] = useState('')
+  const [errorText, seterrorText] = useState('');
+  const [loading, setloading] = useState(false);
 
-  function formatPhoneNumber(phoneNumber) {
-    seterrorText('')
+  function onAuthStateChangeListener(user) {
+    if (user) {
+      console.log('auto login');
+    }
+  }
+  useEffect(() => {
+    const subscriber = auth().onAuthStateChanged(onAuthStateChangeListener);
+    return () => {
+      subscriber;
+    };
+  }, []);
+
+  async function formatPhoneNumber(phoneNumber) {
+    setloading(true);
+    seterrorText('');
     // Remove all non-digits from the phone number
-    let number = phoneNumber
-    number = number.replace(/\D/g, '');
-
-    // Apply regex to format phone number into bracket format
-    const phoneRegex = /^(\d{3})(\d{3})(\d{4})$/;
+    let number = phoneNumber;
+    number = number.replace('0', '+92');
+    console.log('number', number);
+    // number = number.replace(/\D/g, '');
+    // const phoneRegex = /^(\d{3})(\d{3})(\d{4})$/;
+    const phoneRegex = /^(\+92|0)3\d{9}$/;
     const match = number.match(phoneRegex);
-
     if (match) {
-      const formattedPhoneNumber = `(${match[1]}) ${match[2]}-${match[3]}`;
-      console.log('number is valid', number)
-      return formattedPhoneNumber;
+      // const formattedPhoneNumber = `(${match[1]}) ${match[2]}-${match[3]}`;
+      // console.log('number is valid', number)
+      console.log('im hi');
+      const confirmation = await auth().signInWithPhoneNumber(number);
+      setUserID(number);
+      console.log('confirmation', confirmation);
+      try {
+        await AsyncStorage.setItem('@userID', number);
+      } catch (e) {
+        seterrorText('Something Went Wrong!');
+      }
+      props.navigation.navigate('Verify', {
+        confirmation: confirmation,
+        userId: number,
+      });
+      return number;
     } else {
-      seterrorText('Invalid Phone Number!')
+      setloading(false);
+      seterrorText('Invalid Phone Number!');
       console.log('Invalid phone number.');
     }
   }
@@ -106,17 +136,18 @@ export default function Login(props) {
         </View>
       </View>
       <EmailInput
-      
+        onChangeText={val => {
+          setphoneNumber(val);
+        }}
       />
       <PrimaryButton
         onPress={() => formatPhoneNumber(phoneNumber)}
         text={AppStrings[Language].login}
+        loading={loading}
       />
-      {errorText?
-      <PrimaryTextComp
-      text={errorText}
-      customTextStyle={{color:'red'}}
-      />:null}
+      {errorText ? (
+        <PrimaryTextComp text={errorText} customTextStyle={{color: 'red'}} />
+      ) : null}
     </View>
   );
 }

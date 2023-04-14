@@ -51,6 +51,7 @@ const styles = StyleSheet.create({
   },
   input: {
     width: WINDOW_WIDTH * 0.7,
+    color:'black'
   },
   mainContainer: {
     width: MAINCARD_WIDTH,

@@ -17,7 +17,9 @@ export const AppStrings={
         raiseDays:'Raise for 4 days.',
         raiseDaysQoute:'Each team member will create and share their own Pop-Up Store.',
         scheduleEvent:'Schedule Event',
-
-
+        name:'Name',
+        email:'Email',
+        confirm:'Confirm',
+        enterUserDetails:'Enter Your Details',
     },
 }

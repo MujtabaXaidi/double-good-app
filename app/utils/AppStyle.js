@@ -8,7 +8,8 @@ export const AppColors={
         whiteRGBA:'rgba(255,255,255,0.7)',
         black:'#000000',
         white:"#ffffff",
-        lightGrey:'#f0f0f0'
+        lightGrey:'#f0f0f0',
+        grey:'grey'
     }
 }
 export const AppFontFamily={

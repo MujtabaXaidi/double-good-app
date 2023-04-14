@@ -1,4 +1,4 @@
-import {StyleSheet, Text, View, TouchableOpacity, Button} from 'react-native';
+import {StyleSheet, Text, View, TouchableOpacity, Button,ActivityIndicator} from 'react-native';
 import React, {useContext} from 'react';
 import AppContext from '../utils/AppContext';
 import {AppStrings} from '../utils/AppStrings';
@@ -11,7 +11,7 @@ import {
   WINDOW_WIDTH,
 } from '../utils/AppStyle';
 
-export default function PrimaryButton({customStyle, customTextStyle,onPress,text}) {
+export default function PrimaryButton({customStyle, customTextStyle,onPress,text,loading}) {
   const {Theme, Language} = useContext(AppContext);
   return (
     <View
@@ -24,14 +24,17 @@ export default function PrimaryButton({customStyle, customTextStyle,onPress,text
         style={{
           width: MAINCARD_WIDTH,
           height: WINDOW_HEIGHT * 0.05,
-          backgroundColor: AppColors[Theme].primary,
+          backgroundColor: !loading ? AppColors[Theme].primary:AppColors[Theme].grey ,
           alignItems: 'center',
           justifyContent: 'center',
           borderRadius: 5,
         }}>
-        <Text style={[{fontFamily: AppFontFamily.bold,fontSize:AppFontSize.medium,color:AppColors[Theme].white}, customTextStyle]}>
+        {!loading ?<Text style={[{fontFamily: AppFontFamily.bold,fontSize:AppFontSize.medium,color:AppColors[Theme].white}, customTextStyle]}>
           {text}
-        </Text>
+        </Text>: <ActivityIndicator
+        color={AppColors[Theme].white}
+        size={'small'}
+        />}
       </TouchableOpacity>
     </View>
   );

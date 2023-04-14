@@ -1,5 +1,5 @@
 import {StyleSheet, Text, View} from 'react-native';
-import React, {useContext} from 'react';
+import React, {useContext,useState} from 'react';
 import OtpComp from '../components/OtpComp';
 import PrimaryTextComp from '../components/PrimaryTextComp';
 import AppContext from '../utils/AppContext';
@@ -14,9 +14,29 @@ import {
 import PrimaryButton from '../components/PrimaryButton';
 import {AppStrings} from '../utils/AppStrings';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons'
-
+import databaseInstance from '../database/FirebaseUtils'  
+import { UserModel } from '../model/userModel';
 export default function Verify(props) {
   const {Theme, Language} = useContext(AppContext);
+  const [Confirmation, setConfirmation] = useState(props.route.params.confirmation)
+  const [userId, setUserId] = useState(props.route.params.userId);
+  const onOptEnter=(val)=>{
+    console.log('val', val);
+    Confirmation.confirm(val).then(resp=>{
+      {
+        console.log('res opt confirm', resp)
+        // if(res.additionalUserInfo.isNewUser){
+          let user= new UserModel("notgiven",userId,"email@gmail.com")
+          databaseInstance.createNewUser(user).then(res=>{
+            console.log('res new user creaed', res)
+            props.navigation.navigate('EnterUserDetail',{userId:userId})
+
+          })
+        // }
+        
+      }
+    })
+  }
   return (
     <View
       style={{
@@ -62,14 +82,14 @@ export default function Verify(props) {
           fontSize: AppFontSize.large,
         }}
       />
-      <OtpComp />
+      <OtpComp  onChange={onOptEnter}/>
       <View style={{width: MAINCARD_WIDTH}}>
         <PrimaryTextComp
           text={AppStrings[Language].verifyMessage}
           customTextStyle={{color: AppColors[Theme].black}}
         />
       </View>
-      <PrimaryButton text={AppStrings[Language].verify} onPress={()=>props.navigation.navigate('HomeNavHandler')}/>
+      {/* <PrimaryButton text={AppStrings[Language].verify} onPress={()=>props.navigation.navigate('HomeNavHandler')}/> */}
       <PrimaryTextComp text={'Resend'} customTextStyle={{fontFamily:AppFontFamily.bold,color:AppColors[Theme].primary}}/>
     </View>
   );
