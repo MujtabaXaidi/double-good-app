@@ -11,8 +11,8 @@ export default function TopTabs() {
   return (
     <Tab.Navigator>
       <Tab.Screen name="Chat" component={Chat} />
-      <Tab.Screen name="Team" component={EventTeam} />
-      <Tab.Screen name="Store" component={EventStore} />
+      <Tab.Screen name="Event" component={EventTeam} />
+      <Tab.Screen name="My Store" component={EventStore} />
     </Tab.Navigator>
   )
 }

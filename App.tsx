@@ -16,6 +16,9 @@ import ScheduleEvent from './app/screens/ScheduleEvent';
 import AddEventDetails from './app/screens/AddEventDetails';
 import EventInfo from './app/screens/EventInfo';
 import EnterUserDetail from './app/screens/EnterUserDetail';
+import CreateStore from './app/screens/CreateStore';
+import AllEvents from './app/screens/AllEvents';
+import Products from './app/screens/Products';
 
 const StackContainer = createNativeStackNavigator();
 const SplashStack = createNativeStackNavigator();
@@ -29,6 +32,7 @@ const ProfileHandler = ()=>{
       <ProfileStack.Screen component={Profile} name='Profile'/>
       <ProfileStack.Screen component={Account} name='Account'/>
       <ProfileStack.Screen component={About} name='About'/>
+      <ProfileStack.Screen component={AllEvents} name="AllEvents"/>
     </ProfileStack.Navigator>
   )
 }
@@ -41,6 +45,8 @@ const HomeNavHandler = ()=>{
       <HomeStack.Screen component={ScheduleEvent} name='ScheduleEvent'/>
       <HomeStack.Screen component={AddEventDetails} name='AddEventDetails'/>
       <HomeStack.Screen component={EventInfo} name='EventInfo'/>
+      <HomeStack.Screen component={CreateStore} name='CreateStore'/>
+      <HomeStack.Screen component={Products} name='Products'/>
     </HomeStack.Navigator>
   )
 }
@@ -79,8 +85,11 @@ export default function App() {
   const [Language, setLanguage] = useState('en')
   const [Theme, setTheme] = useState('blue')
   const [userID, setUserID] = useState('')
+  const [userDetails, setUserDetails] = useState({})
   return (
     <AppContext.Provider value={{
+      userDetails,
+      setUserDetails,
       Language,
       setLanguage,
       Theme,

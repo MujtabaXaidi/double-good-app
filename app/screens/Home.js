@@ -1,10 +1,12 @@
 import {
+  Button,
   Image,
   ScrollView,
   StyleSheet,
   FlatList,
   View,
   TouchableOpacity,
+  Text
 } from 'react-native';
 import React, {useContext, useState, useEffect} from 'react';
 import {
@@ -42,24 +44,25 @@ const dummyData = [
 
 export default function Home(props) {
   const [userDATA, setUserDATA] = useState(user);
-  const {Theme, Language, userID} = useContext(AppContext);
+  const {Theme, Language, userID,setUserDetails} = useContext(AppContext);
   const [eventData, seteventData] = useState();
   const [eventExists, seteventExists] = useState(false);
   const getUserData = () => {
     databaseInstance.getSinglerUser(userID).then(res => {
       setUserDATA(res);
+      setUserDetails(res);
       console.log('res of user', res);
     });
     getEventDetails();
   };
   const getEventDetails = async () => {
     await databaseInstance.getUserEvent(userID).then(res => {
-      console.log('res hehe', res);
-      if (res._data) {
+      console.log('res hehe...............', res._docs[0]._data);
+      if (res._docs[0]._data) {
         seteventExists(true);
       }
       console.log('eventExists', eventExists);
-      seteventData(res);
+      seteventData(res._docs[0]._data);
       console.log('userEvent res', eventData);
     });
   };
@@ -114,7 +117,10 @@ export default function Home(props) {
             </TouchableOpacity>
           </View>
         </View>
-        <View style={{width: MAINCARD_WIDTH}}>
+        <View style={{width: MAINCARD_WIDTH}} >
+          <TouchableOpacity onPress={()=>{props.navigation.navigate('Products')}}>
+            <Text>Products Screen Testing</Text>
+          </TouchableOpacity>
           <PrimaryTextComp
             text={'My Events'}
             customTextStyle={{
@@ -125,21 +131,32 @@ export default function Home(props) {
           />
         </View>
         {eventExists ? <TouchableOpacity
-        style={[styles.eventUser,{backgroundColor: AppColors[Theme].primary,}]}
+        onPress={()=>props.navigation.navigate("EventInfo")}
+        style={[styles.eventUser,{backgroundColor: AppColors[Theme].primary,justifyContent:'flex-end'}]}
         >
           <View style={{margin: 20, }}>
             <PrimaryTextComp
-            text={eventData?._data?.eventName}
+            customTextStyle={{fontSize:AppFontSize.medium,fontFamily:AppFontFamily.regular,color:AppColors[Theme].white}}
+            text={'Organizer'}
             />
             <PrimaryTextComp
-            text={eventData?._data?.statedDate.toDate().toDateString()}
+            text={eventData?.eventName}
+            customTextStyle={{fontSize:AppFontSize.extraLarge,fontFamily:AppFontFamily.bold,color:AppColors[Theme].white}}
+            />
+            <View style={{flexDirection:'row'}}>
+            {/* {`${ new Date(eventData?.startDate.seconds * 1000 + eventData?.startDate.seconds.nanoseconds / 1000000).toLocaleString()}`} */}
+            <PrimaryTextComp
+            text={ new Date(eventData?.startDate.seconds * 1000 + eventData?.startDate.nanoseconds / 1000000).toDateString()+' - '}
+            customTextStyle={{fontSize:AppFontSize.small,fontFamily:AppFontFamily.bold,color:AppColors[Theme].white}}
             />
             <PrimaryTextComp
-            text={eventData?._data?.endDate.toDate().toDateString()}
+            text={new Date(eventData?.endDate.seconds * 1000 + eventData?.endDate.nanoseconds / 1000000).toDateString()}
+            customTextStyle={{fontSize:AppFontSize.small,fontFamily:AppFontFamily.bold,color:AppColors[Theme].white}}
             />
-            
+            </View>
           </View>
         </TouchableOpacity> : null}
+
         {!eventExists ? (
           <TouchableOpacity
             onPress={() => {

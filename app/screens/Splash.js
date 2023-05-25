@@ -6,14 +6,32 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export default function Splash(props) {
   const {Theme, userID, setUserID} = useContext(AppContext);
+  
+  const navHandler = () =>{
+    setTimeout(() => {
+      // props.navigation.navigate('AuthStack');
+      if (userID === '') {
+        console.log('userID', userID);
+        props.navigation.navigate('AuthStack');
+      } else {
+        props.navigation.navigate('HomeNavHandler');
+      }
+    }, 3000);
+  }
 
   const getUserID = async () => {
+    console.log('userID here', userID);
     try {
-      const value = await AsyncStorage.getItem('@userID');
-      if (value !== null) {
-        setUserID(value);
-        console.log('number', value);
-      }
+      const value = await AsyncStorage.getItem('@userID').then(res => {
+        console.log('res of number', res);
+        if (res !== '') {
+          setUserID(res);
+          console.log('number userID hehe', userID);
+        } else {
+          console.log('userID is null after Try');
+        }
+        navHandler();
+      })
     } catch (e) {
       console.log('userID is null');
     }
@@ -21,13 +39,6 @@ export default function Splash(props) {
 
   useEffect(() => {
     getUserID();
-    setTimeout(() => {
-      if (userID == null || userID == undefined) {
-        props.navigation.navigate('AuthStack');
-      } else {
-        props.navigation.navigate('HomeNavHandler');
-      }
-    }, 3000);
   }, []);
 
   return (

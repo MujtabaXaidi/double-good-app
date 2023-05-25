@@ -69,6 +69,46 @@ export default function Login(props) {
     }
   }
 
+  async function formatPhoneNumberUS(phoneNumber) {
+    seterrorText('')
+    // Remove all non-digit characters from the input
+    const digitsOnly = phoneNumber.replace(/\D/g, '');
+
+    // Check if the input is a valid US phone number
+    const isValidUSNumber = /^\d{10}$/.test(digitsOnly);
+
+    if (isValidUSNumber) {
+      // Format the US phone number as (XXX) XXX-XXXX
+      const formattedNumber = digitsOnly.replace(
+        /(\d{3})(\d{3})(\d{4})/,
+        '($1) $2-$3',
+      );
+
+      // Concatenate the country code (+1) with the formatted number
+      const countryCode = '+1';
+      const phoneNumberWithCountryCode = countryCode + formattedNumber;
+
+      const confirmation = await auth().signInWithPhoneNumber(
+        phoneNumberWithCountryCode,
+      );
+      setUserID(phoneNumberWithCountryCode);
+      console.log('confirmation', confirmation);
+      try {
+        await AsyncStorage.setItem('@userID', phoneNumberWithCountryCode);
+      } catch (e) {
+        seterrorText('Something Went Wrong!');
+      }
+      props.navigation.navigate('Verify', {
+        confirmation: confirmation,
+        userId: phoneNumberWithCountryCode,
+      });
+    } else {
+      setloading(false);
+      seterrorText('Invalid Phone Number!');
+      console.log('Invalid phone number.');
+    }
+  }
+
   return (
     <View style={[styles.container, {backgroundColor: AppColors[Theme].white}]}>
       <View

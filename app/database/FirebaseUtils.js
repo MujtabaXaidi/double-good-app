@@ -3,6 +3,8 @@ let instance=null;
 let USER_COLLECTION='User';
 let PROFILE_COLLECTION='profile';
 let EVENT_COLLECTION="Event";
+let MESSSAGE_COLLECTION="Message";
+let PRODUCTS_COLLECTION="Products"
 class Database {
 
     constructor() {
@@ -35,17 +37,42 @@ class Database {
         return user;
     }
     async addNewEvent(EventModel){
-        let newEvent=await firebase.firestore().collection(EVENT_COLLECTION).add(EventModel);
+        let newEvent=await firebase.firestore().collection(EVENT_COLLECTION).doc(EventModel.getEventCode()).set(EventModel);
         return newEvent;
     }
     async addUserEvent(EventModel){
         console.log('EventModel.getUserId()', EventModel.getUserId());
-        let newEvent=await firebase.firestore().collection(USER_COLLECTION).doc(EventModel.getUserId()).collection(EVENT_COLLECTION).doc(EventModel.getUserId()).set(EventModel);
+        let newEvent=await firebase.firestore().collection(USER_COLLECTION).doc(EventModel.getUserId()).collection(EVENT_COLLECTION).doc(EventModel.getEventCode()).set(EventModel);
         return newEvent;
     }
+    async deleteEvent(id){
+      let status=  await firebase.firestore().collection(EVENT_COLLECTION).doc(id).update({status:false});
+        return status;
+    }
     async getUserEvent(userId){
-        let userEvent=await firebase.firestore().collection(USER_COLLECTION).doc(userId).collection(EVENT_COLLECTION).doc(userId).get();
+        let userEvent=await firebase.firestore().collection(USER_COLLECTION).doc(userId).collection(EVENT_COLLECTION).where('status','==',true ).get();
+        console.log('userEvent.....', userEvent)
         return userEvent;
+    }
+    async sendMessage(chat){
+        let theChat=await firebase.firestore().collection(EVENT_COLLECTION).doc(chat.getUserId()).collection(MESSSAGE_COLLECTION).add(chat);
+        return theChat;
+    }
+    async getPublicMessage(eventId){
+        let messages=await firebase.firestore().collection(EVENT_COLLECTION).doc(eventId).collection(MESSSAGE_COLLECTION).limit(10).get();
+        return messages;
+    }
+    async getDatabaseInstance(eventId){
+        return  firebase.firestore().collection(EVENT_COLLECTION).doc(eventId).collection(MESSSAGE_COLLECTION);
+    }
+    async getProducts(){
+        let products=await firebase.firestore().collection(PRODUCTS_COLLECTION).get();
+        console.log('userEvent.....', products)
+        return products;
+    }
+    async getDocumentWithEventCode(eventId){
+        let doc = await  firebase.firestore().collection(EVENT_COLLECTION).doc(eventId).get();
+        return doc;
     }
 }   
 let databaseInstance=Object.freeze(new Database());

@@ -43,6 +43,7 @@ export default function Profile(props) {
           />
         </TouchableOpacity>
         <TouchableOpacity
+        onPress={()=>{props.navigation.navigate('AllEvents')}}
           style={[styles.item, {backgroundColor: AppColors[Theme].secondary}]}>
           <MaterialCommunityIcons
             name="format-list-bulleted-square"

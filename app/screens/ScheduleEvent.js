@@ -112,12 +112,12 @@ export default function ScheduleEvent(props) {
         onPress={()=>{props.navigation.navigate('AddEventDetails')}}
         text={AppStrings[Language].scheduleEvent}
         />
-        <TouchableOpacity onPress={()=>{props.navigation.navigate('EventInfo')}}>
+        {/* <TouchableOpacity onPress={()=>{props.navigation.navigate('EventInfo')}}>
           <PrimaryTextComp
           text={'Event Details Screen'}
           />
           
-        </TouchableOpacity>
+        </TouchableOpacity> */}
       </View>
     </View>
   );
